@@ -1,0 +1,33 @@
+php_value date.timezone 'Europe/London'
+
+ErrorDocument 404 /error_pages/404.php
+ErrorDocument 403 /error_pages/403.php
+
+# BEGIN GZIP
+<ifmodule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
+</ifmodule>
+# END GZIP
+
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks
+  RewriteEngine On
+
+  # Adaptive-Images -----------------------------------------------------------------------------------
+
+  # Add any directories you wish to omit from the Adaptive-Images process on a new line, as follows:
+  # RewriteCond %{REQUEST_URI} !ignore-this-directory
+  # RewriteCond %{REQUEST_URI} !and-ignore-this-directory-too
+  
+  RewriteCond %{REQUEST_URI} !assets
+
+  # don't apply the AI behaviour to images inside AI's cache folder:
+  RewriteCond %{REQUEST_URI} !ai-cache
+    
+  # Send any GIF, JPG, or PNG request that IS NOT stored inside one of the above directories
+  # to adaptive-images.php so we can select appropriately sized versions
+  
+  RewriteRule \.(?:jpe?g|gif|png)$ adaptive-images.php
+
+  # END Adaptive-Images -------------------------------------------------------------------------------
+</IfModule>
